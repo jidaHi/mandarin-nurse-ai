@@ -1,262 +1,35 @@
-
-<!DOCTYPE html>
-<html lang="th">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mandarin Nurse AI</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#f2f7fc;color:#19324a;
-font-family:Arial,sans-serif}
-header{background:#143c60;color:white;padding:25px 18px}
-main{max-width:850px;margin:auto;padding:18px}
-h1{margin:0 0 8px}
-.card{background:white;border-radius:16px;
-padding:18px;margin-bottom:16px;
-box-shadow:0 2px 10px #d9e4ef}
-button{border:0;border-radius:10px;
-background:#1764a0;color:white;
-padding:12px 16px;margin:5px 3px;cursor:pointer}
-button:disabled{background:#a9b4c1}
-.option{display:block;width:100%;text-align:left;
-background:#e9f2fa;color:#19324a}
-.good{color:#13834d}
-.bad{color:#b34343}
-small{color:#62798b}
-</style>
-</head>
-<body>
-<header>
-<h1>🩺 Mandarin Nurse AI</h1>
-<p>เรียนภาษาจีนสำหรับพยาบาล PACU</p>
-</header>
-<main>
-<div class="card">
-<h2>ยินดีต้อนรับ</h2>
-<p>ฝึกฟัง พูด อ่าน และเขียนภาษาจีน</p>
-<p>ผ่านแบบทดสอบ 80% เพื่อปลดล็อกบทต่อไป</p>
-</div>
-
-<div class="card">
-<h2>📚 บทเรียน 15 บท</h2>
-<div id="lessons"></div>
-</div>
-
-<div class="card">
-<h2 id="lessonTitle">บทที่ 1 การทักทาย</h2>
-<p id="chinese">您好！</p>
-<h3 id="pinyin">Nín hǎo!</h3>
-<p id="meaning">สวัสดีค่ะ/ครับ</p>
-<button onclick="speak()">🔊 ฟังภาษาจีน</button>
-<button onclick="startSpeech()">🎤 ลองพูด</button>
-<p id="speechResult"></p>
-<small>การรู้จำเสียงขึ้นอยู่กับเบราว์เซอร์
-ยังไม่ใช่ระบบตรวจวรรณยุกต์ AI</small>
-</div>
-
-<div class="card">
-<h2>📝 แบบทดสอบ</h2>
-<p id="question">คำว่า Nín hǎo หมายถึงอะไร?</p>
-<div id="answers"></div>
-<p id="feedback"></p>
-<p id="score"></p>
-<button onclick="nextQuestion()">ข้อถัดไป</button>
-</div>
-</main>
-
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mandarin Nurse AI — ภาษาจีนสำหรับพยาบาล PACU</title><style>
+:root{font-family:system-ui,'Noto Sans Thai',sans-serif;color:#17324b;background:#eef5fa}*{box-sizing:border-box}body{margin:0}header{background:linear-gradient(125deg,#0c3456,#166c8d);color:white;padding:22px 15px}.wrap{max-width:1050px;margin:auto}h1{margin:0;font-size:clamp(23px,5vw,34px)}h2{font-size:21px;margin:0 0 13px}h3{margin:6px 0}p{line-height:1.7}.sub{opacity:.88}.layout{display:grid;grid-template-columns:240px 1fr;gap:15px;padding:15px}.card{background:white;border:1px solid #d9e6ed;border-radius:17px;padding:17px;margin-bottom:15px;box-shadow:0 2px 8px #163d5710}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;background:#176a9b;color:white;border-radius:10px;padding:10px 13px}button:hover{filter:brightness(.95)}button:disabled{background:#aebbc5;cursor:not-allowed}.ghost{background:#e7f1f7;color:#155477}.lessonbtn{width:100%;display:block;text-align:left;margin:4px 0;background:#e9f2f7;color:#24445d}.lessonbtn.active{background:#0c628e;color:white}.lessonbtn:disabled{opacity:.58}.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.pill{display:inline-block;padding:4px 10px;border-radius:99px;background:#e0f5ed;color:#12694c;font-size:13px}.muted{color:#5e7687;font-size:13px}.wordgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:9px}.word{border:1px solid #dbe8ee;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:4px}.zh{font-size:25px;font-weight:650}.py{color:#156489}.reading{color:#6d7481;font-size:13px}.speak{align-self:flex-start;padding:6px 11px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.tabs button{background:#e5eff5;color:#18567c}.tabs button.active{background:#176a9b;color:white}.dialogue{padding:12px;border-radius:12px;background:#f0f7fa;margin:8px 0}.dialogue.patient{background:#f6f1fb}.choice{display:block;width:100%;text-align:left;background:#eaf3f8;color:#17324b;margin:7px 0}.choice.good{background:#d6f4e2}.choice.bad{background:#ffe5e5}.hide{display:none!important}.anatomy{display:grid;grid-template-columns:minmax(230px,1fr) minmax(230px,1fr);gap:12px}.figure{border:1px solid #d9e6ed;border-radius:14px;background:#f7fbfd;padding:8px}.figure svg{width:100%;max-height:550px}.spot{fill:#168bc0;stroke:white;stroke-width:2;cursor:pointer;opacity:.87}.spot:focus,.spot:hover{fill:#f4a340;outline:none}.spot.selected{fill:#ef8738}.bodypart{stroke:#456b81;stroke-width:3;fill:#dbe8ed}.selectedinfo{border-radius:12px;background:#eaf5fa;padding:14px}.progress{height:10px;background:#dce8ef;border-radius:10px;overflow:hidden}.progress>div{height:100%;background:#15926c}.admin input,.admin textarea{width:100%;padding:10px;border:1px solid #bacfdb;border-radius:9px;margin:5px 0 10px}.admin textarea{min-height:90px}.danger{color:#ae2d2d}.ok{color:#087749}.footer{text-align:center;padding:20px;color:#5c7180}details{margin-top:10px}summary{cursor:pointer;font-weight:600}@media(max-width:760px){.layout{grid-template-columns:1fr}.sidebar{display:none}.sidebar.open{display:block}.anatomy{grid-template-columns:1fr}.card{padding:13px}.wordgrid{grid-template-columns:1fr 1fr}.word{padding:9px}.zh{font-size:22px}}@media(max-width:420px){.wordgrid{grid-template-columns:1fr}}
+</style></head><body><header><div class="wrap"><h1>🩺 Mandarin Nurse AI</h1><div class="sub">ภาษาจีนสำหรับพยาบาล PACU · ฟัง พูด อ่าน เขียน · 15 บท</div></div></header><div class="wrap layout"><aside class="sidebar" id="sidebar"><div class="card"><h2>📚 บทเรียน</h2><div id="lessonNav"></div><p class="muted">เรียนผ่าน 80% เพื่อปลดล็อกบทถัดไป (บันทึกในเบราว์เซอร์เครื่องนี้)</p></div></aside><main><div class="card"><div class="row"><button class="ghost" onclick="document.querySelector('#sidebar').classList.toggle('open')">☰ เลือกบท</button><button class="ghost" onclick="showAdmin()">⚙️ จัดการเนื้อหา</button><span class="pill" id="progressLabel">บทที่ 1</span></div></div><section id="study"><div class="card"><h2 id="lessonTitle">กำลังโหลดบทเรียน...</h2><div class="muted" id="wordCount"></div><div class="tabs"><button id="tabWords" class="active" onclick="tab('words')">📖 คำศัพท์</button><button id="tabAnatomy" onclick="tab('anatomy')">🧍 กดเลือกอวัยวะ</button><button id="tabDialogue" onclick="tab('dialogue')">💬 บทสนทนา</button><button id="tabQuiz" onclick="tab('quiz')">📝 แบบทดสอบ</button></div><div id="wordsPane"><input id="search" placeholder="ค้นหาคำศัพท์ จีน / พินอิน / ไทย" style="width:100%;padding:11px;border:1px solid #c9dbe5;border-radius:10px;margin-bottom:12px" oninput="renderWords()"><div id="wordGrid" class="wordgrid"></div></div><div id="anatomyPane" class="hide"><p>แตะจุดบนร่างกายเพื่อเรียนคำศัพท์ กดฟังเสียงจีนได้ทันที ด้านซ้าย–ขวาอ้างอิงตามร่างกายของคนในภาพ</p><div class="anatomy"><div class="figure"><h3>ด้านหน้า · 身体正面</h3><svg id="bodySvg" viewBox="0 0 300 590" role="img" aria-label="ภาพร่างกายมนุษย์พร้อมจุดกดคำศัพท์"><circle class="bodypart" cx="150" cy="62" r="42"/><rect class="bodypart" x="138" y="98" width="24" height="22" rx="6"/><path class="bodypart" d="M104 121 Q150 108 196 121 L209 267 Q178 296 150 286 Q121 296 91 267 Z"/><path class="bodypart" d="M103 125 L75 145 L41 290 L62 300 L113 180Z"/><path class="bodypart" d="M197 125 L225 145 L259 290 L238 300 L187 180Z"/><ellipse class="bodypart" cx="48" cy="320" rx="16" ry="29"/><ellipse class="bodypart" cx="252" cy="320" rx="16" ry="29"/><path class="bodypart" d="M103 278 L150 290 L142 448 L102 448 L92 345Z"/><path class="bodypart" d="M197 278 L150 290 L158 448 L198 448 L208 345Z"/><path class="bodypart" d="M104 444 L141 444 L139 535 L104 535Z"/><path class="bodypart" d="M159 444 L196 444 L196 535 L161 535Z"/><ellipse class="bodypart" cx="121" cy="551" rx="26" ry="15"/><ellipse class="bodypart" cx="179" cy="551" rx="26" ry="15"/><g id="bodySpots"></g></svg></div><div><div id="partInfo" class="selectedinfo">👆 เลือกจุดบนภาพเพื่อดูคำศัพท์และฟังเสียง</div><div class="card" style="margin-top:12px"><h3>เลือกคำจากรายการ</h3><div id="partButtons" class="row"></div></div><div class="card"><h3>🫀 อวัยวะภายใน</h3><div id="organButtons" class="row"></div><div id="organInfo" class="selectedinfo" style="margin-top:12px">เลือกอวัยวะเพื่อดูคำศัพท์</div></div></div></div></div><div id="dialoguePane" class="hide"><p>แตะ 🔊 เพื่อฟังทีละประโยค แล้วฝึกพูดตาม หากเบราว์เซอร์รองรับสามารถลองใช้ไมโครโฟนเพื่อดูข้อความที่ระบบได้ยิน (ไม่ใช่คะแนนการออกเสียง)</p><div id="dialogueList"></div><div id="heard"></div></div><div id="quizPane" class="hide"><div id="quizArea"></div></div></div></section><section id="admin" class="hide"><div class="card admin"><h2>⚙️ แก้ไขบทเรียน (ในเครื่องนี้)</h2><p class="muted">เพิ่ม/แก้ไขคำศัพท์และบทสนทนาได้ทันที ข้อมูลบันทึกในเบราว์เซอร์นี้เท่านั้น หากต้องการให้ทุกคนเห็นการแก้ไข ให้ส่งออก JSON แล้วนำไปแทนไฟล์ lessons.json ใน GitHub ระบบนี้ไม่ใช่หน้า Admin ที่ปลอดภัยสำหรับเว็บเก็บเงิน</p><label>เลือกบท</label><select id="editLesson" onchange="renderEditor()"></select><label>ชื่อบทเรียน</label><input id="editTitle"><label>คำศัพท์: หนึ่งบรรทัดต่อคำ ในรูปแบบ จีน | พินอิน | ความหมายไทย | คำอ่านไทย</label><textarea id="editWords" style="min-height:260px"></textarea><label>บทสนทนา: หนึ่งบรรทัดต่อประโยค ในรูปแบบ ผู้พูด | จีน | พินอิน | ความหมายไทย</label><textarea id="editDialogue" style="min-height:180px"></textarea><div class="row"><button onclick="saveEditor()">💾 บันทึกการแก้ไข</button><button class="ghost" onclick="addLesson()">➕ เพิ่มบทใหม่</button><button class="ghost" onclick="exportJson()">⬇️ ส่งออก lessons.json</button><button class="ghost" onclick="document.querySelector('#importFile').click()">⬆️ นำเข้า JSON</button><input type="file" id="importFile" accept=".json,application/json" class="hide" onchange="importJson(event)"></div><p id="adminStatus" class="muted"></p><button class="ghost" onclick="closeAdmin()">← กลับไปเรียน</button></div></section></main></div><div class="footer">Mandarin Nurse AI · ต้นแบบเพื่อการเรียนรู้ · คำอ่านไทยเป็นเพียงแนวทาง ควรฟังเสียงมาตรฐานประกอบ</div>
 <script>
-const titles=[
-"การทักทาย",
-"ส่วนต่าง ๆ ของร่างกาย",
-"อวัยวะภายใน",
-"อาการของผู้ป่วย",
-"การซักประวัติก่อนผ่าตัด",
-"ประวัติแพ้ยาและยาประจำ",
-"การเตรียมผู้ป่วยก่อนผ่าตัด",
-"การรับผู้ป่วยเข้าห้องผ่าตัด",
-"การรับผู้ป่วยเข้า PACU",
-"การประเมินสัญญาณชีพ",
-"การประเมินความปวด",
-"คลื่นไส้ อาเจียน และอาการผิดปกติ",
-"ยาในห้องพักฟื้น",
-"การดูแลระหว่างพักฟื้นและ PCA",
-"การส่งกลับห้องพักและกลับบ้าน"
-];
-
-const phrases=[
-["您好！","Nín hǎo!","สวัสดีค่ะ/ครับ"],
-["头","Tóu","ศีรษะ"],
-["心脏","Xīnzàng","หัวใจ"],
-["您疼吗？","Nín téng ma?","คุณปวดไหมคะ?"],
-["您以前做过手术吗？",
-"Nín yǐqián zuò guo shǒushù ma?",
-"เคยผ่าตัดมาก่อนไหมคะ?"],
-["您对什么药过敏？",
-"Nín duì shénme yào guòmǐn?",
-"คุณแพ้ยาอะไรคะ?"],
-["请不要吃东西。",
-"Qǐng bú yào chī dōngxi.",
-"กรุณาอย่ารับประทานอาหาร"],
-["请告诉我您的名字。",
-"Qǐng gàosu wǒ nín de míngzi.",
-"กรุณาบอกชื่อของคุณ"],
-["您现在在恢复室。",
-"Nín xiànzài zài huīfùshì.",
-"ตอนนี้คุณอยู่ในห้องพักฟื้น"],
-["我要量血压。",
-"Wǒ yào liáng xuèyā.",
-"ฉันจะวัดความดัน"],
-["您有多疼？",
-"Nín yǒu duō téng?",
-"คุณปวดมากแค่ไหน?"],
-["您想吐吗？",
-"Nín xiǎng tù ma?",
-"คุณอยากอาเจียนไหม?"],
-["我给您止痛药。",
-"Wǒ gěi nín zhǐtòngyào.",
-"ฉันจะให้ยาแก้ปวด"],
-["如果疼，就按一下按钮。",
-"Rúguǒ téng, jiù àn yíxià ànniǔ.",
-"ถ้าปวดให้กดปุ่มหนึ่งครั้ง"],
-["您可以回病房了。",
-"Nín kěyǐ huí bìngfáng le.",
-"คุณสามารถกลับห้องพักได้แล้ว"]
-];
-
-let unlocked=Number(localStorage.getItem("unlocked")||1);
-let current=1;
-let index=0;
-let correct=0;
-let answered=false;
-
-function renderLessons(){
-const area=document.getElementById("lessons");
-area.innerHTML="";
-titles.forEach((title,i)=>{
-let n=i+1;
-let b=document.createElement("button");
-b.textContent=(n>unlocked?"🔒 ":"📖 ")+
-"บท "+n+" "+title;
-b.disabled=n>unlocked;
-b.onclick=()=>loadLesson(n);
-area.appendChild(b);
-});
-}
-
-function loadLesson(n){
-current=n;index=0;correct=0;
-document.getElementById("lessonTitle").textContent=
-"บทที่ "+n+" "+titles[n-1];
-document.getElementById("chinese").textContent=
-phrases[n-1][0];
-document.getElementById("pinyin").textContent=
-phrases[n-1][1];
-document.getElementById("meaning").textContent=
-phrases[n-1][2];
-document.getElementById("speechResult").textContent="";
-renderQuestion();
-}
-
-function speak(){
-if(!("speechSynthesis" in window)){
-alert("เบราว์เซอร์ไม่รองรับการอ่านเสียง");
-return;
-}
-speechSynthesis.cancel();
-let u=new SpeechSynthesisUtterance(phrases[current-1][0]);
-u.lang="zh-CN";
-u.rate=0.8;
-speechSynthesis.speak(u);
-}
-
-function startSpeech(){
-const SR=window.SpeechRecognition||
-window.webkitSpeechRecognition;
-if(!SR){
-alert("เบราว์เซอร์นี้ไม่รองรับการรู้จำเสียง");
-return;
-}
-let r=new SR();
-r.lang="zh-CN";
-r.onresult=e=>{
-let heard=e.results[0][0].transcript;
-document.getElementById("speechResult").textContent=
-"ระบบได้ยิน: "+heard+
-" (ยังไม่ได้ประเมินวรรณยุกต์)";
-};
-r.onerror=e=>{
-document.getElementById("speechResult").textContent=
-"ไม่สามารถรับเสียงได้: "+e.error;
-};
-r.start();
-}
-
-function renderQuestion(){
-answered=false;
-let target=phrases[current-1];
-let q=document.getElementById("question");
-q.textContent="ข้อ "+(index+1)+"/5 : "+
-target[1]+" หมายถึงอะไร?";
-let answers=document.getElementById("answers");
-answers.innerHTML="";
-let choices=[
-target[2],
-phrases[(current+index)%15][2],
-phrases[(current+index+3)%15][2]
-];
-choices=[...new Set(choices)];
-for(let i=0;i<15&&choices.length<3;i++){
-if(!choices.includes(phrases[i][2]))
-choices.push(phrases[i][2]);
-}
-choices.sort(()=>Math.random()-0.5);
-choices.forEach(c=>{
-let b=document.createElement("button");
-b.className="option";
-b.textContent=c;
-b.onclick=()=>{
-if(answered)return;
-answered=true;
-if(c===target[2])correct++;
-document.getElementById("feedback").textContent=
-c===target[2]?"✓ ถูกต้อง":"✗ คำตอบที่ถูก: "+target[2];
-};
-answers.appendChild(b);
-});
-document.getElementById("feedback").textContent="";
-document.getElementById("score").textContent=
-"คะแนนถูก "+correct+" ข้อ";
-}
-
-function nextQuestion(){
-if(!answered){
-alert("กรุณาเลือกคำตอบก่อน");
-return;
-}
-index++;
-if(index>=5){
-let score=correct*20;
-document.getElementById("score").textContent=
-"คะแนนรวม "+score+"%";
-if(score>=80){
-if(current===unlocked&&unlocked<15){
-unlocked++;
-localStorage.setItem("unlocked",unlocked);
-}
-alert("ผ่าน "+score+"% ปลดล็อกบทต่อไปแล้ว");
-}else{
-alert("ได้ "+score+"% ต้องผ่าน 80% ลองใหม่ได้");
-}
-renderLessons();
-index=0;correct=0;
-}else{
-renderQuestion();
-}
-}
-renderLessons();
-loadLesson(1);
-</script>
-</body>
-</html>
-
+let lessons=[],current=1,activeTab='words',quiz=[],qIndex=0,correct=0,answered=false,chosenPart='';const $=id=>document.getElementById(id);const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const unlocked=()=>Math.max(1,Number(localStorage.getItem('mnUnlocked')||1));
+async function init(){try{let saved=localStorage.getItem('mnLessons');lessons=saved?JSON.parse(saved):await(await fetch('lessons.json')).json();if(!Array.isArray(lessons)||!lessons.length)throw Error('ข้อมูลไม่ถูกต้อง');nav();loadLesson(1)}catch(e){$('lessonTitle').textContent='โหลดบทเรียนไม่ได้: '+e.message+' — โปรดเปิดผ่าน GitHub Pages หรือเว็บเซิร์ฟเวอร์ (ไม่ใช่ไฟล์ในเครื่องโดยตรง)'}}
+function nav(){$('lessonNav').innerHTML='';lessons.forEach((l,i)=>{let b=document.createElement('button');b.className='lessonbtn'+(current===i+1?' active':'');b.textContent=(i+1>unlocked()?'🔒 ':'📘 ')+`บท ${i+1} ${l.title}`;b.disabled=i+1>unlocked();b.onclick=()=>loadLesson(i+1);$('lessonNav').appendChild(b)})}
+function loadLesson(n){current=n;activeTab='words';$('search').value='';$('lessonTitle').textContent=`บทที่ ${n} — ${lessons[n-1].title}`;$('wordCount').textContent=`คำศัพท์ ${lessons[n-1].words.length} คำ · บทสนทนา ${lessons[n-1].dialogue.length} ประโยค`;$('progressLabel').textContent=`บท ${n} / ${lessons.length} · ปลดล็อกถึง ${unlocked()}`;nav();renderWords();renderDialogue();buildQuiz();tab('words');window.scrollTo({top:0,behavior:'smooth'})}
+function tab(t){activeTab=t;['words','anatomy','dialogue','quiz'].forEach(x=>{$(x+'Pane').classList.toggle('hide',x!==t);$('tab'+x[0].toUpperCase()+x.slice(1)).classList.toggle('active',x===t)});if(t==='anatomy')renderAnatomy()}
+function speak(text){if(!('speechSynthesis'in window)){alert('เบราว์เซอร์ไม่รองรับเสียงพูด');return}speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(text);u.lang='zh-CN';u.rate=.77;let v=speechSynthesis.getVoices().find(v=>v.lang.toLowerCase().startsWith('zh'));if(v)u.voice=v;speechSynthesis.speak(u)}
+function wordHTML(w){return `<div class="word"><span class="zh">${esc(w.zh)}</span><span class="py">${esc(w.py)}</span><span>${esc(w.th)}</span><span class="reading">อ่านไทย: ${esc(w.read||'—')}</span><button class="speak ghost" data-zh="${esc(w.zh)}">🔊 ฟังเสียง</button></div>`}
+function renderWords(){let s=$('search').value.toLowerCase().trim(),ws=lessons[current-1].words.filter(w=>[w.zh,w.py,w.th,w.read].some(x=>String(x||'').toLowerCase().includes(s)));$('wordGrid').innerHTML=ws.map(wordHTML).join('')||'<p>ไม่พบคำศัพท์</p>'}
+function renderDialogue(){$('dialogueList').innerHTML=lessons[current-1].dialogue.map((d,i)=>`<div class="dialogue ${d.role==='病人'?'patient':''}"><b>${esc(d.role==='护士'?'👩‍⚕️ พยาบาล':d.role==='病人'?'🧑 ผู้ป่วย':d.role)}</b><div class="zh">${esc(d.zh)}</div><div class="py">${esc(d.py)}</div><div>${esc(d.th)}</div><div class="row"><button class="ghost" data-zh="${esc(d.zh)}">🔊 ฟัง</button><button class="ghost" onclick="listen(${i})">🎤 ลองพูด</button></div></div>`).join('')}
+function listen(i){let SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){$('heard').textContent='เบราว์เซอร์นี้ไม่รองรับการรู้จำเสียงภาษาจีน';return}let r=new SR();r.lang='zh-CN';r.onresult=e=>{$('heard').textContent='ระบบได้ยิน: '+e.results[0][0].transcript+' (การถอดข้อความไม่ใช่การตรวจวรรณยุกต์)'};r.onerror=e=>$('heard').textContent='รับเสียงไม่สำเร็จ: '+e.error;r.start()}
+document.addEventListener('click',e=>{let b=e.target.closest('button[data-zh]');if(b)speak(b.dataset.zh)});
+// Clickable front body coordinates. These points map to actual lesson-2 vocabulary.
+const parts=[['头',150,31],['头发',150,12],['额头',150,42],['眼睛',137,58],['耳朵',108,65],['鼻子',150,67],['嘴巴',150,82],['下巴',150,94],['脖子',150,109],['肩膀',104,139],['胸口',150,174],['肚子',150,235],['小腹',150,266],['手臂',73,220],['胳膊肘',55,267],['手腕',48,302],['手',48,326],['手指',48,346],['大腿',116,363],['膝盖',116,439],['小腿',120,483],['脚踝',120,532],['脚',120,552],['脚趾',120,565]];
+const organs=['大脑','心脏','肺','气管','食道','胃','肝脏','胆囊','胰腺','脾脏','肾脏','小肠','大肠','阑尾','膀胱','子宫','卵巢','输卵管','前列腺','血管','骨头','脊椎','肌肉','神经'];
+function findWord(zh){for(let l of lessons){let w=l.words.find(w=>w.zh===zh);if(w)return w}return{zh,py:'',th:'',read:''}}
+function showPart(zh,target='partInfo'){let w=findWord(zh);$(target).innerHTML=`<div class="zh">${esc(w.zh)}</div><div class="py">${esc(w.py)}</div><div><b>${esc(w.th)}</b></div><div class="reading">อ่านไทย: ${esc(w.read)}</div><button class="ghost" data-zh="${esc(w.zh)}">🔊 ฟังคำนี้</button>`;document.querySelectorAll('.spot').forEach(el=>el.classList.toggle('selected',el.dataset.name===zh))}
+function renderAnatomy(){if(!$('bodySpots').childElementCount){let ns='http://www.w3.org/2000/svg';parts.forEach(([name,x,y])=>{let c=document.createElementNS(ns,'circle');c.setAttribute('cx',x);c.setAttribute('cy',y);c.setAttribute('r','8');c.setAttribute('tabindex','0');c.setAttribute('role','button');c.setAttribute('aria-label',name);c.setAttribute('class','spot');c.dataset.name=name;c.addEventListener('click',()=>showPart(name));c.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showPart(name)}});$('bodySpots').appendChild(c)})}if(!$('partButtons').childElementCount){parts.forEach(([name])=>{let b=document.createElement('button');b.className='ghost';b.textContent=findWord(name).th;b.onclick=()=>showPart(name);$('partButtons').appendChild(b)});organs.forEach(name=>{let b=document.createElement('button');b.className='ghost';b.textContent=findWord(name).th;b.onclick=()=>showPart(name,'organInfo');$('organButtons').appendChild(b)})}}
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function buildQuiz(){let words=lessons[current-1].words;let pool=shuffle([...words]);quiz=pool.slice(0,Math.min(10,pool.length)).map((w,i)=>{let opts=shuffle([w,...shuffle(words.filter(v=>v.th!==w.th)).slice(0,3)]);return{w,opts,kind:i%2}});qIndex=0;correct=0;answered=false;renderQuiz()}
+function renderQuiz(){let box=$('quizArea');if(qIndex>=quiz.length){let score=Math.round(correct/quiz.length*100);let pass=score>=80;box.innerHTML=`<h2 class="${pass?'ok':'danger'}">${pass?'🎉 ผ่านบทเรียน':'📚 ยังไม่ผ่าน'} — ${score}%</h2><p>ตอบถูก ${correct} จาก ${quiz.length} ข้อ · เกณฑ์ผ่าน 80%</p><p>${pass?'ปลดล็อกบทถัดไปแล้ว (ในเบราว์เซอร์เครื่องนี้)':'กลับไปทบทวนคำศัพท์ แล้วลองสอบใหม่ได้'}</p><button onclick="buildQuiz()">🔄 สอบใหม่</button> ${pass&&current<lessons.length?'<button onclick="loadLesson(current+1)">ไปบทถัดไป →</button>':''}`;if(pass&&current>=unlocked()&&current<lessons.length){localStorage.setItem('mnUnlocked',current+1);nav();$('progressLabel').textContent=`บท ${current} / ${lessons.length} · ปลดล็อกถึง ${unlocked()}`}return}
+let q=quiz[qIndex];answered=false;box.innerHTML=`<p class="muted">ข้อ ${qIndex+1} / ${quiz.length} · ตอบถูก ${correct} ข้อ</p><div class="progress"><div style="width:${100*qIndex/quiz.length}%"></div></div><h3>${q.kind?'คำว่าอะไรตรงกับความหมายนี้?':'คำภาษาจีนนี้แปลว่าอะไร?'}</h3><div class="zh">${q.kind?esc(q.w.th):esc(q.w.zh)}</div><p class="py">${q.kind?'':esc(q.w.py)}</p><button class="ghost" data-zh="${esc(q.w.zh)}">🔊 ฟังโจทย์</button><div id="options"></div><div id="answerNote"></div><button id="nextBtn" disabled onclick="qIndex++;renderQuiz()">ข้อถัดไป →</button>`;q.opts.forEach(v=>{let b=document.createElement('button');b.className='choice';b.textContent=q.kind?v.zh:v.th;b.onclick=()=>{if(answered)return;answered=true;let good=v.zh===q.w.zh;if(good)correct++;document.querySelectorAll('.choice').forEach(el=>el.disabled=true);b.classList.add(good?'good':'bad');$('answerNote').innerHTML=`<p class="${good?'ok':'danger'}">${good?'✓ ถูกต้อง':'✗ ยังไม่ถูก'} · เฉลย: ${esc(q.w.zh)} — ${esc(q.w.py)} — ${esc(q.w.th)}</p>`;$('nextBtn').disabled=false};$('options').appendChild(b)})}
+function showAdmin(){$('study').classList.add('hide');$('admin').classList.remove('hide');$('editLesson').innerHTML=lessons.map((l,i)=>`<option value="${i}">บท ${i+1} ${esc(l.title)}</option>`).join('');$('editLesson').value=current-1;renderEditor()}
+function closeAdmin(){$('admin').classList.add('hide');$('study').classList.remove('hide');loadLesson(Math.min(current,unlocked()))}
+function renderEditor(){let l=lessons[Number($('editLesson').value)];$('editTitle').value=l.title;$('editWords').value=l.words.map(w=>[w.zh,w.py,w.th,w.read].join(' | ')).join('\n');$('editDialogue').value=l.dialogue.map(d=>[d.role,d.zh,d.py,d.th].join(' | ')).join('\n')}
+function parseRows(text,n){return text.split('\n').map(s=>s.trim()).filter(Boolean).map((s,i)=>{let v=s.split('|').map(x=>x.trim());if(v.length!==n||v.some(x=>!x))throw Error(`รูปแบบข้อมูลบรรทัด ${i+1} ไม่ถูกต้อง ต้องมี ${n} ช่องคั่นด้วย |`);return v})}
+function saveEditor(){try{let i=Number($('editLesson').value),words=parseRows($('editWords').value,4),dialogue=parseRows($('editDialogue').value,4);lessons[i]={id:i+1,title:$('editTitle').value.trim(),words:words.map(([zh,py,th,read])=>({zh,py,th,read})),dialogue:dialogue.map(([role,zh,py,th])=>({role,zh,py,th}))};if(!lessons[i].title||!words.length)throw Error('กรุณาใส่ชื่อบทและคำศัพท์');localStorage.setItem('mnLessons',JSON.stringify(lessons));$('adminStatus').textContent='✓ บันทึกในเครื่องนี้แล้ว กรุณาส่งออก JSON เพื่อนำไปอัปเดต GitHub';nav()}catch(e){$('adminStatus').textContent='เกิดข้อผิดพลาด: '+e.message}}
+function addLesson(){lessons.push({id:lessons.length+1,title:'บทเรียนใหม่',words:[{zh:'你好',py:'Nǐ hǎo',th:'สวัสดี',read:'หนี่ ห่าว'}],dialogue:[{role:'护士',zh:'你好',py:'Nǐ hǎo',th:'สวัสดี'}]});localStorage.setItem('mnLessons',JSON.stringify(lessons));showAdmin();$('editLesson').value=lessons.length-1;renderEditor()}
+function exportJson(){let blob=new Blob([JSON.stringify(lessons,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='lessons.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+async function importJson(e){try{let data=JSON.parse(await e.target.files[0].text());if(!Array.isArray(data)||!data.length||!data.every(l=>Array.isArray(l.words)&&Array.isArray(l.dialogue)))throw Error('โครงสร้าง JSON ไม่ถูกต้อง');lessons=data;localStorage.setItem('mnLessons',JSON.stringify(lessons));showAdmin();$('adminStatus').textContent='นำเข้าข้อมูลสำเร็จ'}catch(err){$('adminStatus').textContent=err.message}}
+init();
+</script></body></html>
